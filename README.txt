@@ -1,0 +1,11 @@
+*Enunt*
+
+Să se implementeze un program în limbaj de asamblare care efectuează conversia unor numere într-o bază dată și afișează rezultatele. Numerele ce trebuie convertite sunt numere întregi, pozitive, pe 32 de biți, iar baza poate să fie între 2 și 16.
+
+
+*Implementare*
+
+Initial am folosit 3 registre : edx, ebx, respectiv ecx pentru a memora datele de intrare (vectorul cu numerele de transformat, vectorul cu bazele de numeratie, dimensiunea celor 2 vectori). 
+In continuare, pentru transformarea din baza 10 in alta baza aveam nevoie de operatia DIV, implicit de registrele EDX:EAX, asa ca am pastrat pe stiva valoarea lor initiala. Dupa s-a facut verificarea validitatii bazei in care urma sa fie facuta transformarea (daca aceasta este cuprinsa intre 2 si 16). 
+Apoi s-a realizat transformarea propriu-zisa. Am impartit primul numar din vector (registrul EAX) la prima baza ([ebx]) pana cand catul a devenit 0. Iar resturile le-am pastrat pe fiecare in parte pe stiva, ca mai apoi sa le pot scoate de pe stiva in ordine inversa. S-a folosit un contor ECX pentu a stii cate operatii de tip PUSH au fost realizate in cazul resturilor. ECX-ul initial (dimensiunea vectorilor) a fost pastrat in prealabil pe stiva. Dupa ce s-a scos cate un element de pe stiva (resturile), s-a verificat daca acestea depasesc valoarea 9 ( >9 ), pentru a afisa caracterele corespunzatoare in acest caz(s-au realizat 6 label-uri in care am printat caracterul corespunzator si am decrementat ECX-ul, trecandu-se astfel la urmatorul rest). In cazul in care restul era <=9, pur si simplu am afisat registrul EDX cu PRINT_DEC. La finalul labelului stack_pop se decrementa ECX-ul, iar in cazul in care era 0, se trecea la urmatorul numar de transformat. 
+In label-ul increment am scos de pe stiva in ECX valoarea sa initiala (dimensiunea celor 2 vectori), vectorul cu numere de transformat in EDX. S-a adaugat 4 la EDX, EBX pentru a trece la urmatorul element din fiecare dintre cei doi vectori si s-a decrementat ECX-ul(dimensiunea initiala a vectorilor). In cazul in care acesta nu era 0, se repeta procesul de mai sus, iar in caz contrar, se sarea la label-ul finish unde se executa ret. 
